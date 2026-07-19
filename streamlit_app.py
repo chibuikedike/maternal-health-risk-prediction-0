@@ -113,7 +113,9 @@ if isinstance(shap_values, list):
     real_contributions = shap_values[predicted_class][0]
 else:
     # Newer SHAP version handler (3D array: rows, features, classes)
-    real_contributions = shap_values[0, :, predicted_class]
+    HIGH_RISK_CLASS = 2
+    real_contributions = shap_values[0, :, HIGH_RISK_CLASS]
+    # real_contributions = shap_values[0, :, predicted_class]
 
 # Convert array to a standard list for the plotting code below
 tree_contributions = real_contributions.tolist()
