@@ -157,7 +157,6 @@ st.pyplot(fig)
 #  CLINICAL NOTES & PDF REPORT DOWNLOAD ENGINE
 # ==============================================================================
 
-st.write("---")
 st.subheader("📝 Clinical Consultation Notes")
 
 # 2. Define a function to generate a cleanly formatted PDF document structure in memory
@@ -246,7 +245,7 @@ doctor_notes = st.text_area(
 
 clean_pdf_title = status_title.replace("🟢 ", "").replace("🟡 ", "").replace("🚨 ", "")
 
-# 2. FORCE data types to be pure primitive integers/floats right at extraction
+# change data types to integers/floats right at extraction
 pdf_age_val = int(age)
 pdf_sys_val = int(systolic_bp)
 pdf_dia_val = int(diastolic_bp)
@@ -254,7 +253,7 @@ pdf_bs_val = float(bs)
 pdf_temp_val = float(body_temp)
 pdf_hr_val = int(heart_rate)
 
-# 3. Create a clean dictionary from our locked-in primitive values
+# Create a clean dictionary from values
 pdf_summary_data = {
     'Patient Age': f"{pdf_age_val} Years",
     'Systolic BP': f"{pdf_sys_val} mmHg",
@@ -264,7 +263,7 @@ pdf_summary_data = {
     'Heart Rate': f"{pdf_hr_val} BPM"
 }
 
-# 4. Generate the PDF payload using the correct inputs
+# Generate the PDF payload 
 pdf_data = generate_pdf(
     patient_data=pdf_summary_data, 
     probabilities=pred_probabilities, 
@@ -272,7 +271,7 @@ pdf_data = generate_pdf(
     notes=doctor_notes
 )
 
-# 5. FIXED: Fully closed download button syntax parameters
+# Download button 
 st.download_button(
     label="Download Clinical PDF Report",
     data=bytes(pdf_data),
