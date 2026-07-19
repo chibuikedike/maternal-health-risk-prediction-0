@@ -11,7 +11,7 @@ import datetime
 st.set_page_config(page_title="Clinical Triage AI", page_icon="🏥", layout="centered")
 
 # ==============================================================================
-# 📥 1. LOAD THE TRAINED PIPELINE
+# LOAD THE TRAINED PIPELINE
 # ==============================================================================
 @st.cache_resource
 def load_pipeline():
@@ -28,14 +28,14 @@ except FileNotFoundError:
     st.stop()
 
 # ==============================================================================
-# 🎨 2. WEB APPLICATION INTERFACE LAYOUT
+# WEB APPLICATION INTERFACE LAYOUT
 # ==============================================================================
 st.title("🏥 Clinical Patient Triage & Risk Diagnostics AI")
 st.markdown("Enter a patient's current vital signs below to instantly calculate their triage risk level along with a fully transparent AI audit trail.")
 st.write("---")
 
 # Section: Input Fields organized side-by-side using columns
-st.subheader("📊 Patient Vital Signs Input")
+st.subheader("Patient Vital Signs Input")
 col1, col2 = st.columns(2)
 
 with col1:
@@ -61,7 +61,7 @@ raw_input_df = pd.DataFrame([{
 st.write("---")
 
 # ==============================================================================
-# 🧠 3. COMPUTE LIVE RISK DIAGNOSIS
+# COMPUTE LIVE RISK DIAGNOSIS
 # ==============================================================================
 # Scale inputs using our locked-in StandardScaler rules
 scaled_input_df = scaler.transform(raw_input_df[feature_names])
@@ -94,7 +94,7 @@ st.write("---")
 
 
 # ==============================================================================
-#  GENERATING THE REAL EXPLAINABLE AI AUDIT GRAPH
+#  EXPLAINABLE AI AUDIT GRAPH
 # ==============================================================================
 
 st.subheader("🛡️ Clinical Transparency Audit Trail")
@@ -148,51 +148,11 @@ ax.set_xlabel("<- Pulls Toward Safe  |  Escalates Risk Alert ->", fontsize=9, co
 st.pyplot(fig)
 
 # ==============================================================================
-# GENERATING THE LIVE SHAP WATERFALL ESCALATION GRAPH
-# ==============================================================================
-# import shap
-# import matplotlib.pyplot as plt
-
-# st.subheader("🛡️ Clinical Transparency Diagnostic Waterfall")
-# st.markdown("This cascade shows exactly how the patient's vitals calculated a step-by-step path from the average baseline to their final diagnostic result.")
-
-# # 1. Initialize the tree explainer explicitly enabling native SHAP object format
-# explainer = shap.TreeExplainer(rf_model)
-
-# # 2. Compute the explanation object for your current slider input
-# # (Passing check_additivity=False keeps server responses fast and smooth)
-# explanation = explainer(scaled_input_df, check_additivity=False)
-
-# # 3. Construct the explanation wrapper for the winning class index
-# # This builds the structural object containing baseline, scores, and raw values
-# class_explanation = shap.Explanation(
-#     values=explanation.values[0, :, predicted_class],
-#     base_values=explanation.base_values[0, predicted_class],
-#     data=raw_input_df.iloc[0].values,  # Maps raw unscaled values onto the text labels!
-#     feature_names=feature_names
-# )
-
-# # 4. Generate the visual Matplotlib canvas
-# fig, ax = plt.subplots(figsize=(8, 4))
-
-# # Pass the custom explanation object directly into SHAP's native waterfall plotter
-# shap.plots.waterfall(class_explanation, max_display=5, show=False)
-
-# # Clean up styling details for a premium look
-# plt.title(f"Diagnostic Contribution Escalation Map ({status_title})", fontsize=11, fontweight='bold', pad=15)
-# plt.tight_layout()
-
-# # Render the plot frame inside the Streamlit web app layout window cleanly
-# st.pyplot(fig)
-
-# ==============================================================================
-#  CLINICAL NOTES & PDF REPORT DOWNLOAD ENGINE (FIXED)
+#  CLINICAL NOTES & PDF REPORT DOWNLOAD ENGINE
 # ==============================================================================
 
 st.write("---")
 st.subheader("📝 Clinical Consultation Notes")
-
-
 
 # 2. Define a function to generate a cleanly formatted PDF document structure in memory
 def generate_pdf(patient_data, probabilities, diagnosis, notes):
@@ -221,13 +181,12 @@ def generate_pdf(patient_data, probabilities, diagnosis, notes):
     pdf.set_font("Helvetica", "", 11)
     pdf.set_text_color(0, 0, 0)
     
-    # ✅ FIXED: Expanded width to 75 to avoid text smashing, and removed val[0] slicing!
     for key, val in patient_data.items():
         pdf.cell(75, 7, f"  - {key}:", border=0)
         pdf.cell(0, 7, f"{val}", border=0, ln=True) # Changed from val[0] to val
     pdf.ln(5)
     
-    # Section 2: AI Diagnostic Verdict Matrix
+    # AI Diagnostic Verdict Matrix
     pdf.set_font("Helvetica", "B", 12)
     pdf.set_text_color(49, 51, 63)
     pdf.cell(0, 8, "2. AI Triage Diagnostics Verdict", ln=True)
@@ -243,7 +202,7 @@ def generate_pdf(patient_data, probabilities, diagnosis, notes):
     pdf.cell(0, 6, f"Confidence breakdown: Low: {p_low*100:.1f}% | Mid: {p_mid*100:.1f}% | High: {p_high*100:.1f}%", ln=True)
     pdf.ln(5)
     
-    # Section 3: Physician Review Text Box
+    # Physician Review Text Box
     pdf.set_font("Helvetica", "B", 12)
     pdf.set_text_color(49, 51, 63)
     pdf.cell(0, 8, "3. Attending Physician Consultation Notes", ln=True)
@@ -302,7 +261,7 @@ pdf_data = generate_pdf(
 
 # 5. FIXED: Fully closed download button syntax parameters
 st.download_button(
-    label="📥 Download Official Clinical PDF Report",
+    label="Download Clinical PDF Report",
     data=bytes(pdf_data),
     file_name=f"maternal_health_report_{datetime.date.today()}.pdf",
     mime="application/pdf",
