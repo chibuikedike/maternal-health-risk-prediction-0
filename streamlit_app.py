@@ -223,6 +223,13 @@ def generate_pdf(patient_data, probabilities, diagnosis, notes):
     pdf.set_font("Helvetica", "I", 9)
     pdf.set_text_color(120, 120, 120)
     pdf.cell(0, 5, "Attending Clinician Signature Validation Stamp", ln=True)
+
+     # Footer: Signature Validation Lines
+    pdf.line(10, pdf.get_y(), 80, pdf.get_y())
+    pdf.ln(2)
+    pdf.set_font("Helvetica", "I", 9)
+    pdf.set_text_color(120, 120, 120)
+    pdf.cell(0, 5, "This report is generated using a model trained with a synthetic data and may not be accurate. For accurate health condition kindly seek a medical advice from your healthcare provider", ln=True)
     
     # Convert file structure matrix directly into an downloadable byte sequence output
     return pdf.output()
