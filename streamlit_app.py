@@ -91,6 +91,8 @@ p_low, p_mid, p_high = pred_probabilities
 st.write(f"**Confidence Metrics:** Low Risk: `{p_low*100:.1f}%` | Mid Risk: `{p_mid*100:.1f}%` | High Risk: `{p_high*100:.1f}%` ")
 
 st.write("---")
+st.warning("This result is generated using a model trained with a synthetic data and may not be accurate. For accurate health condition kindly seek a medical advice from your healthcare provider")
+    
 
 
 # ==============================================================================
