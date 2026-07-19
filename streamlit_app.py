@@ -145,7 +145,7 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['left'].set_visible(False)
 ax.spines['bottom'].set_visible(False)
-ax.set_xlabel("<- Reduces Predicted Risk  |  Increases Predicted Risk ->", fontsize=9, color='#31333F')
+ax.set_xlabel("<- Reduces High Risk  |  Increases High Risk ->", fontsize=9, color='#31333F')
 
 # Render the plot inside the web window frame cleanly
 st.pyplot(fig)
