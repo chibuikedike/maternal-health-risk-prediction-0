@@ -30,7 +30,7 @@ except FileNotFoundError:
 # ==============================================================================
 # WEB APPLICATION INTERFACE LAYOUT
 # ==============================================================================
-st.title("🏥 Clinical Patient Triage & Risk Diagnostics AI")
+st.title("🏥 Patient Triage & Risk Diagnostics AI")
 st.markdown("Enter a patient's current vital signs below to instantly calculate their triage risk level along with a fully transparent AI audit trail.")
 st.write("---")
 
