@@ -134,10 +134,14 @@ colors = ['#ff4b4b' if x > 0 else '#23c14c' for x in clean_contributions]
 y_pos = np.arange(len(feature_names))
 ax.barh(y_pos, clean_contributions, color=colors, edgecolor='none', height=0.6)
 
+# Set a symmetric x-axis around zero
+max_abs = np.max(np.abs(clean_contributions))
+ax.set_xlim(-max_abs * 1.1, max_abs * 1.1)
+
 # 4. Attach clear y-axis labels
 ax.set_yticks(y_pos)
 ax.set_yticklabels(feature_names, fontsize=10, fontweight='bold')
-ax.invert_yaxis()  # Top-down feature layout
+ax.invert_yaxis()
 
 # Style clean-up
 ax.axvline(x=0, color='#31333F', linestyle='-', linewidth=1, alpha=0.5)
