@@ -91,7 +91,6 @@ Then open the local Streamlit URL shown in your terminal, usually `http://localh
 
 - The included model file is required for the app to run.
 - The app is intended for educational and demonstration purposes only.
-- This repository currently contains some template-era data files in `data/` that are not used by the live Streamlit app.
 - If you see a scikit-learn version warning while loading the model, it means the model was serialized with a different scikit-learn version than the one currently installed.
 
 ## Disclaimer
