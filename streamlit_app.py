@@ -149,83 +149,312 @@ ax.set_xlabel("<- Reduces High Risk  |  Increases High Risk ->", fontsize=9, col
 st.pyplot(fig)
 
 # ==============================================================================
-#  CLINICAL NOTES & PDF REPORT DOWNLOAD ENGINE
+# CLINICAL NOTES & PDF REPORT DOWNLOAD ENGINE
 # ==============================================================================
 
-st.subheader("📝 Clinical Consultation Notes")
+st.subheader("Clinical Consultation Notes")
 
-# Define a function to generate a cleanly formatted PDF document structure in memory
+
 def generate_pdf(patient_data, probabilities, diagnosis, notes):
+    """
+    Generate a clinical PDF report in memory.
+    """
+
     pdf = FPDF()
     pdf.add_page()
-    
-    # Header: Professional Clinic Layout
+
+    # --------------------------------------------------------------------------
+    # Header
+    # --------------------------------------------------------------------------
+
     pdf.set_font("Helvetica", "B", 18)
-    pdf.set_text_color(49, 51, 63) 
-    pdf.cell(0, 10, "MATERNAL HEALTH RISK PREDICTOR REPORT", ln=True, align="C")
-    
+    pdf.set_text_color(49, 51, 63)
+
+    pdf.cell(
+        0,
+        10,
+        "MATERNAL HEALTH RISK PREDICTOR REPORT",
+        ln=True,
+        align="C"
+    )
+
     pdf.set_font("Helvetica", "I", 10)
     pdf.set_text_color(100, 100, 100)
+
     current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    pdf.cell(0, 8, f"Generated on: {current_date} | System Status: Secure", ln=True, align="C")
+
+    pdf.cell(
+        0,
+        8,
+        f"Generated on: {current_date}",
+        ln=True,
+        align="C"
+    )
+
     pdf.ln(5)
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y()) # Horizontal divider line
-    pdf.ln(5)
-    
-    # Patient Vital Signs Summary Grid
+
+    # Header divider
+    pdf.line(
+        10,
+        pdf.get_y(),
+        200,
+        pdf.get_y()
+    )
+
+    pdf.ln(6)
+
+    # --------------------------------------------------------------------------
+    # 1. Patient Vital Signs Summary
+    # --------------------------------------------------------------------------
+
     pdf.set_font("Helvetica", "B", 12)
     pdf.set_text_color(49, 51, 63)
-    pdf.cell(0, 8, "1. Patient Vital Signs Summary", ln=True)
+
+    pdf.cell(
+        0,
+        8,
+        "1. Patient Vital Signs Summary",
+        ln=True
+    )
+
     pdf.ln(2)
-    
+
     pdf.set_font("Helvetica", "", 11)
     pdf.set_text_color(0, 0, 0)
-    
-    for key, val in patient_data.items():
-        pdf.cell(75, 7, f"  - {key}:", border=0)
-        pdf.cell(0, 7, f"{val}", border=0, ln=True) # Changed from val[0] to val
+
+    for key, value in patient_data.items():
+
+        pdf.cell(
+            75,
+            7,
+            f"{key}:",
+            border=0
+        )
+
+        pdf.cell(
+            0,
+            7,
+            str(value),
+            border=0,
+            ln=True
+        )
+
     pdf.ln(5)
-    
-    # AI Diagnostic Verdict Matrix
+
+    # --------------------------------------------------------------------------
+    # 2. AI Triage Diagnostic Verdict
+    # --------------------------------------------------------------------------
+
     pdf.set_font("Helvetica", "B", 12)
     pdf.set_text_color(49, 51, 63)
-    pdf.cell(0, 8, "2. AI Triage Diagnostics Verdict", ln=True)
+
+    pdf.cell(
+        0,
+        8,
+        "2. AI Triage Diagnostic Verdict",
+        ln=True
+    )
+
     pdf.ln(2)
-    
+
+    # Diagnosis
     pdf.set_font("Helvetica", "B", 11)
-    pdf.set_text_color(197, 15, 15) if "HIGH" in diagnosis else pdf.set_text_color(15, 117, 43)
-    pdf.cell(0, 8, f"ASSIGNED TIER -> {diagnosis}", ln=True)
-    
+
+    if "HIGH" in diagnosis.upper():
+        pdf.set_text_color(197, 15, 15)
+
+    elif "MID" in diagnosis.upper() or "MEDIUM" in diagnosis.upper():
+        pdf.set_text_color(180, 110, 0)
+
+    else:
+        pdf.set_text_color(15, 117, 43)
+
+    pdf.cell(
+        0,
+        8,
+        f"Assigned Risk Tier: {diagnosis}",
+        ln=True
+    )
+
+    # Confidence scores
     pdf.set_font("Helvetica", "", 10)
     pdf.set_text_color(100, 100, 100)
+
     p_low, p_mid, p_high = probabilities
-    pdf.cell(0, 6, f"Confidence breakdown: Low: {p_low*100:.1f}% | Mid: {p_mid*100:.1f}% | High: {p_high*100:.1f}%", ln=True)
+
+    pdf.cell(
+        0,
+        6,
+        (
+            f"Confidence Breakdown: "
+            f"Low {p_low * 100:.1f}% | "
+            f"Mid {p_mid * 100:.1f}% | "
+            f"High {p_high * 100:.1f}%"
+        ),
+        ln=True
+    )
+
     pdf.ln(5)
-    
-    # Physician Review Text Box
+
+    # --------------------------------------------------------------------------
+    # 3. Clinical Consultation Notes
+    # --------------------------------------------------------------------------
+
     pdf.set_font("Helvetica", "B", 12)
     pdf.set_text_color(49, 51, 63)
-    pdf.cell(0, 8, "3. Attending Physician Consultation Notes", ln=True)
+
+    pdf.cell(
+        0,
+        8,
+        "3. Clinical Consultation Notes",
+        ln=True
+    )
+
     pdf.ln(2)
-    
+
     pdf.set_font("Helvetica", "", 11)
     pdf.set_text_color(0, 0, 0)
-    if notes.strip() == "":
-        notes = "No consultation notes entered by the attending physician."
-    pdf.multi_cell(0, 6, notes, border=1)
-    pdf.ln(15)
-    
-    # Footer: Signature Validation Lines
-    pdf.line(10, pdf.get_y(), 80, pdf.get_y())
-    pdf.ln(2)
-    pdf.set_font("Helvetica", "I", 9)
-    pdf.set_text_color(120, 120, 120)
-    pdf.cell(0, 5, "Attending Clinician Signature Validation Stamp", ln=True)
-    # Note Disclaimer
-    pdf.line(10, pdf.get_y(), 80, pdf.get_y())
-    pdf.ln(2)
-    pdf.set_font("Helvetica", "I", 9)
-    pdf.set_text_color(120, 120, 120)
-    pdf.cell(0, 5, "This report is generated by a machine learning model trained on synthetic data and is intended for educational purposes only. It should not be used as a substitute for professional medical diagnosis or treatment", ln=True)
-    
 
+    if not notes.strip():
+        notes = "No consultation notes entered."
+
+    # Use multi_cell so long notes wrap correctly.
+    pdf.multi_cell(
+        0,
+        6,
+        notes,
+        border=1
+    )
+
+    pdf.ln(15)
+
+    # --------------------------------------------------------------------------
+    # Clinician Signature
+    # --------------------------------------------------------------------------
+
+    pdf.line(
+        10,
+        pdf.get_y(),
+        80,
+        pdf.get_y()
+    )
+
+    pdf.ln(2)
+
+    pdf.set_font("Helvetica", "I", 9)
+    pdf.set_text_color(120, 120, 120)
+
+    pdf.cell(
+        0,
+        5,
+        "Attending Clinician Signature",
+        ln=True
+    )
+
+    pdf.ln(8)
+
+    # --------------------------------------------------------------------------
+    # Disclaimer
+    # --------------------------------------------------------------------------
+
+    pdf.line(
+        10,
+        pdf.get_y(),
+        200,
+        pdf.get_y()
+    )
+
+    pdf.ln(3)
+
+    pdf.set_font("Helvetica", "I", 8)
+    pdf.set_text_color(120, 120, 120)
+
+    disclaimer = (
+        "This report contains predictions generated by a machine learning "
+        "model trained on maternal health data. The prediction is intended "
+        "for educational and research purposes and should not be used as "
+        "a substitute for professional medical diagnosis or treatment."
+    )
+
+    pdf.multi_cell(
+        0,
+        5,
+        disclaimer
+    )
+
+    # --------------------------------------------------------------------------
+    # Return PDF as bytes
+    # --------------------------------------------------------------------------
+
+    return bytes(pdf.output())
+
+
+# ==============================================================================
+# CLINICAL NOTES INPUT
+# ==============================================================================
+
+doctor_notes = st.text_area(
+    "Enter diagnostic notes, prescription steps, or patient tracking details:",
+    placeholder=(
+        "e.g., Patient displays elevated blood glucose. "
+        "Advised nutritional adjustments and scheduled a 2-week follow-up."
+    )
+)
+
+
+# ==============================================================================
+# PREPARE PDF DATA
+# ==============================================================================
+
+# Remove visual icons from the prediction title before adding it to the PDF.
+clean_pdf_title = (
+    status_title
+    .replace("🟢 ", "")
+    .replace("🟡 ", "")
+    .replace("🚨 ", "")
+)
+
+
+# Convert values to appropriate numeric types.
+pdf_age_val = int(age)
+pdf_sys_val = int(systolic_bp)
+pdf_dia_val = int(diastolic_bp)
+pdf_bs_val = float(bs)
+pdf_temp_val = float(body_temp)
+pdf_hr_val = int(heart_rate)
+
+
+# Create clean patient data for the PDF.
+pdf_summary_data = {
+    "Patient Age": f"{pdf_age_val} Years",
+    "Systolic BP": f"{pdf_sys_val} mmHg",
+    "Diastolic BP": f"{pdf_dia_val} mmHg",
+    "Blood Sugar": f"{pdf_bs_val} mmol/L",
+    "Body Temperature": f"{pdf_temp_val} F",
+    "Heart Rate": f"{pdf_hr_val} BPM",
+}
+
+
+# ==============================================================================
+# GENERATE PDF
+# ==============================================================================
+
+pdf_data = generate_pdf(
+    patient_data=pdf_summary_data,
+    probabilities=pred_probabilities,
+    diagnosis=clean_pdf_title,
+    notes=doctor_notes,
+)
+
+
+# ==============================================================================
+# DOWNLOAD BUTTON
+# ==============================================================================
+
+st.download_button(
+    label="Download Clinical PDF Report",
+    data=pdf_data,
+    file_name=f"maternal_health_report_{datetime.date.today()}.pdf",
+    mime="application/pdf",
+    use_container_width=True,
+)
