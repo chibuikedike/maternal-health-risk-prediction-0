@@ -146,7 +146,7 @@ ax.spines['bottom'].set_visible(False)
 ax.set_xlabel("<- Reduces High Risk  |  Increases High Risk ->", fontsize=9, color='#31333F')
 
 # Render the plot inside the web window frame cleanly
-st.pyplot(fig)
+#st.pyplot(fig)
 
 # ==============================================================================
 #  CLINICAL NOTES & PDF REPORT DOWNLOAD ENGINE
