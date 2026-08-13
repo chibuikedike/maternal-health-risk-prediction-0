@@ -8,7 +8,7 @@ from fpdf import FPDF
 import datetime
 
 # Page configuration 
-st.set_page_config(page_title="Clinical Triage AI", page_icon="🏥", layout="centered")
+st.set_page_config(page_title="Maternal Health Risk Classifier", page_icon="🏥", layout="centered")
 
 # ==============================================================================
 # LOAD THE TRAINED PIPELINE
@@ -29,8 +29,8 @@ except FileNotFoundError:
 # ==============================================================================
 # WEB APPLICATION INTERFACE LAYOUT
 # ==============================================================================
-st.title("🏥 Patient Triage & Risk Diagnostics AI")
-st.markdown("Enter a patient's current vital signs below to instantly calculate their triage risk level along with a fully transparent AI audit trail.")
+st.title("Maternal Health Risk Classifier")
+st.markdown("Enter a patient's current vital signs below to instantly calculate their risk level along with a risk contribution analysis.")
 
 
 # Input Fields 
