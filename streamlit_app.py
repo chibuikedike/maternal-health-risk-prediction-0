@@ -256,12 +256,12 @@ pdf_summary_data = {
 }
 
 # Generate the PDF payload 
-#pdf_data = generate_pdf(
+pdf_data = generate_pdf(
     #patient_data=pdf_summary_data, 
     #probabilities=pred_probabilities, 
     #diagnosis=clean_pdf_title, 
     #notes=doctor_notes
-#)
+)
 
 # Download button 
 st.download_button(
